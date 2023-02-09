@@ -58,16 +58,21 @@ class Mercader : AppCompatActivity() {
         binding.imagen.setImageResource(R.drawable.objeto)
 
         binding.finalCompra.setOnClickListener {
-            val personaje = recuperarPersonaje()
-            val tamanoRestanteMochilaPersonaje = personaje.LIMITE_MOCHILA - personaje.getTamanoTotal()
-            val tamanoObjetosTotales = ObjetoJuego().getPeso() * binding.cantidad.text.toString().toInt()
-            val precioObjetosTotales = ObjetoJuego().getValor() * binding.cantidad.text.toString().toInt()
-            val monedasPersonajeTotales = personaje.monedero
+            if (binding.cantidad.text.toString().isNotEmpty() && binding.cantidad.text.toString()
+                    .toInt() > 0
+            ) {
+                val personaje = recuperarPersonaje()
+                val tamanoRestanteMochilaPersonaje =
+                    personaje.LIMITE_MOCHILA - personaje.getTamanoTotal()
+                val tamanoObjetosTotales =
+                    ObjetoJuego().getPeso() * binding.cantidad.text.toString().toInt()
+                val precioObjetosTotales =
+                    ObjetoJuego().getValor() * binding.cantidad.text.toString().toInt()
+                val monedasPersonajeTotales = personaje.monedero
 
-            if(tamanoRestanteMochilaPersonaje != 0)
-                if(binding.cantidad.text.toString().toInt() > 0 && binding.cantidad.text.toString() != "")
+                if (tamanoRestanteMochilaPersonaje != 0)
                     if (tamanoRestanteMochilaPersonaje >= tamanoObjetosTotales)
-                        if(monedasPersonajeTotales >= precioObjetosTotales){
+                        if (monedasPersonajeTotales >= precioObjetosTotales) {
                             for (i in 1..binding.cantidad.text.toString().toInt())
                                 personaje.mochila.add(ObjetoJuego())
 
@@ -78,18 +83,20 @@ class Mercader : AppCompatActivity() {
                     else
                         alertaWithNoIntent("No tienes espacio suficiente en tu mochila")
                 else
-                    alertaWithNoIntent("No puedes comprar 0 objetos")
-            else
-                alertaWithNoIntent("No tienes espacio suficiente en tu mochila")
+                    alertaWithNoIntent("No tienes espacio suficiente en tu mochila")
+            } else
+                alertaWithNoIntent("No puedes comprar 0 objetos")
         }
 
         binding.vender.setOnClickListener {
-            val personaje = recuperarPersonaje()
-            val precioObjetosTotales = ObjetoJuego().getValor() * binding.cantidad.text.toString().toInt()
-            val cantidadObjetosPersonaje = personaje.mochila.size
-
-            if(binding.cantidad.text.toString().toInt() > 0 && binding.cantidad.text.toString() != "")
-                if (cantidadObjetosPersonaje >= binding.cantidad.text.toString().toInt()){
+            if (binding.cantidad.text.toString().isNotEmpty() && binding.cantidad.text.toString()
+                    .toInt() > 0
+            ) {
+                val personaje = recuperarPersonaje()
+                val precioObjetosTotales =
+                    ObjetoJuego().getValor() * binding.cantidad.text.toString().toInt()
+                val cantidadObjetosPersonaje = personaje.mochila.size
+                if (cantidadObjetosPersonaje >= binding.cantidad.text.toString().toInt()) {
                     for (i in 1..binding.cantidad.text.toString().toInt())
                         personaje.mochila.removeAt(0)
 
@@ -98,7 +105,7 @@ class Mercader : AppCompatActivity() {
                     alerta("Has vendido ${binding.cantidad.text} objetos")
                 } else
                     alertaWithNoIntent("No tienes suficientes objetos en tu mochila")
-            else
+            } else
                 alertaWithNoIntent("No puedes vender 0 objetos")
         }
 
@@ -110,10 +117,10 @@ class Mercader : AppCompatActivity() {
     fun alerta(mensaje: String) {
         val builder = AlertDialog.Builder(this)
 
-        with(builder){
+        with(builder) {
             setTitle("Alerta")
             setMessage(mensaje)
-            setPositiveButton("Continuar"){dialog, which ->
+            setPositiveButton("Continuar") { dialog, which ->
                 startActivity(Intent(this@Mercader, MainActivity::class.java))
             }
             show()
@@ -123,10 +130,10 @@ class Mercader : AppCompatActivity() {
     fun alertaWithNoIntent(mensaje: String) {
         val builder = AlertDialog.Builder(this)
 
-        with(builder){
+        with(builder) {
             setTitle("Alerta")
             setMessage(mensaje)
-            setPositiveButton("Continuar"){dialog, which ->}
+            setPositiveButton("Continuar") { dialog, which -> }
             show()
         }
     }
